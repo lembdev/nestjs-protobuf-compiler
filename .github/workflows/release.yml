@@ -1,0 +1,50 @@
+name: Release
+on: push
+jobs:
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-node@v3
+        with:
+          node-version: 16
+          cache: npm
+      - run: npm ci
+      - name: Ensure dependencies are compatible with the version of node
+        run: npx ls-engines
+      - run: npm run lint
+
+  test:
+    needs: lint
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        node-version:
+          - 16
+          - 17
+          - 18
+    steps:
+      - uses: actions/checkout@v3
+      - run: git config --global user.name github-actions
+      - run: git config --global user.email github-actions@github.com
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v3
+        with:
+          node-version: ${{ matrix.node-version }}
+          cache: npm
+      - run: npm ci
+      - run: npm run test
+
+  release:
+    runs-on: ubuntu-16.04
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-node@v3
+        with:
+          node-version: 16
+          cache: npm
+      - run: npm ci
+      - name: Release
+        env:
+          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
+        run: npx semantic-release

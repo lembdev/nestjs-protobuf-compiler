@@ -13,7 +13,7 @@
   "homepage": "https://github.com/lembdev/nestjs-protobuf-compiler",
   "author": "Alexander Vyzhanov <lembdev@gmail.com>",
   "license": "MIT",
-  "version": "1.0.0",
+  "version": "0.0.0-development",
   "main": "dist/index.js",
   "typings": "dist/index.d.ts",
   "bin": {
@@ -39,7 +39,8 @@
     "format": "prettier --write \"src/**/*.ts\"",
     "lint": "eslint \"src/**/*.ts\"",
     "npc": "node ./bin/nestjs-protobuf-compiler.js",
-    "test": "jest"
+    "test": "jest",
+    "semantic-release": "semantic-release"
   },
   "engines": {
     "node": ">=16"
@@ -71,7 +72,8 @@
     "lint-staged": "^13.0.3",
     "prettier": "^2.7.1",
     "rimraf": "^3.0.2",
-    "typescript": "^4.8.4"
+    "typescript": "^4.8.4",
+    "semantic-release": "^19.0.5"
   },
   "commitlint": {
     "extends": [
