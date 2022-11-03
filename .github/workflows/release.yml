@@ -3,7 +3,7 @@ name: Release
 'on':
   push:
     branches:
-      - main
+      - master
       - renovate/**
   pull_request:
     types:
@@ -50,7 +50,7 @@ jobs:
       - run: npm run test
 
   release:
-    if: github.ref == 'refs/heads/main'
+    if: github.ref == 'refs/heads/master'
     needs: [lint, test]
     runs-on: ubuntu-latest
     steps:
