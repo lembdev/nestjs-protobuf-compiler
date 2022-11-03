@@ -1,0 +1,31 @@
+syntax = "proto3";
+
+import "google/protobuf/timestamp.proto";
+
+package user;
+
+service TestService {
+  rpc FindOne (FindOneRequest) returns (User) {}
+  rpc Create  (CreateRequest)  returns (User) {}
+  rpc Update  (UpdateRequest)  returns (User) {}
+}
+
+message User {
+  int32                     id          = 1;
+  string                    name        = 2;
+  string                    email       = 3;
+  google.protobuf.Timestamp created_at  = 4;
+  google.protobuf.Timestamp updated_at  = 5;
+}
+
+message FindOneRequest {
+  int32 id = 1;
+}
+message CreateRequest {
+  string name        = 1;
+  string email       = 2;
+}
+message UpdateRequest {
+  string name        = 1;
+  string email       = 2;
+}

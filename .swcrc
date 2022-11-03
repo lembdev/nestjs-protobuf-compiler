@@ -1,0 +1,15 @@
+{
+  "$schema": "https://json.schemastore.org/swcrc",
+  "exclude": [".*\\.js$", ".*\\.map$"],
+  "jsc": {
+    "parser": {
+      "syntax": "typescript",
+      "dynamicImport": true
+    },
+    "target": "es2022"
+  },
+  "module": {
+    "type": "commonjs"
+  },
+  "sourceMaps": true
+}
