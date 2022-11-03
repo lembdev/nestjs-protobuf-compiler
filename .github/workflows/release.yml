@@ -75,7 +75,7 @@ jobs:
         with:
           useRollingCache: true
       - name: Build
-        run: npm build
+        run: npm run build
       - name: Release
         run: npx semantic-release
         env:
