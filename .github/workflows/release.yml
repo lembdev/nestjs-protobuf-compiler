@@ -14,12 +14,17 @@ jobs:
   lint:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
-      - uses: actions/setup-node@v3
+      - name: Checkout
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
         with:
           node-version: 16
           cache: npm
-      - uses: bahmutov/npm-install@v1
+      - name: Install dependencies
+        uses: bahmutov/npm-install@v1
         with:
           useRollingCache: true
       - name: Ensure dependencies are compatible with the version of node
@@ -36,33 +41,41 @@ jobs:
           - 17
           - 18
     steps:
-      - uses: actions/checkout@v3
-      - run: git config --global user.name github-actions
-      - run: git config --global user.email github-actions@github.com
-      - name: Use Node.js ${{ matrix.node-version }}
+      - name: Checkout
+        uses: actions/checkout@v3
+      - name: Setup Node.js ${{ matrix.node-version }}
         uses: actions/setup-node@v3
         with:
           node-version: ${{ matrix.node-version }}
           cache: npm
-      - uses: bahmutov/npm-install@v1
+      - name: Install dependencies
+        uses: bahmutov/npm-install@v1
         with:
           useRollingCache: true
-      - run: npm run test
+      - name: Testing
+        run: npm run test
 
   release:
     if: github.ref == 'refs/heads/master'
     needs: [lint, test]
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
-      - uses: actions/setup-node@v3
+      - name: Checkout
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
         with:
           node-version: 16
           cache: npm
-      - uses: bahmutov/npm-install@v1
+      - name: Install dependencies
+        uses: bahmutov/npm-install@v1
         with:
           useRollingCache: true
-      - run: npx semantic-release
+      - name: Release
+        run: npx semantic-release
         env:
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
           GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
