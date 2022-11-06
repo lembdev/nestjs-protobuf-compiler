@@ -35,7 +35,8 @@
     "prepare": "husky install",
     "prebuild": "rimraf ./dist",
     "build": "swc ./src -d dist --copy-files --source-maps=false",
-    "build:watch": "npm run build -- --source-maps=true --watch",
+    "build:dev": "npm run build -- --source-maps=true",
+    "build:watch": "npm run build:dev -- --watch",
     "format": "prettier --write \"src/**/*.ts\"",
     "lint": "eslint \"src/**/*.ts\"",
     "npc": "node ./bin/nestjs-protobuf-compiler.js",
@@ -83,6 +84,10 @@
     "extends": [
       "@commitlint/config-conventional"
     ]
+  },
+  "lint-staged": {
+    "*": "prettier --write --ignore-unknown",
+    "*.ts": "eslint --fix"
   },
   "prettier": {
     "printWidth": 80,
