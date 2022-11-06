@@ -9,7 +9,7 @@ import './helpers/default-value-helper';
 import './helpers/enum-comment-helper';
 import './helpers/type-helper';
 import './helpers/uncapitalize-hepler';
-import './helpers/from-json.helper';
+import './helpers/convertor.helper';
 import './helpers/to-json.helper';
 import './helpers/import-ts.helper';
 
