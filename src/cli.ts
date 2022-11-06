@@ -42,4 +42,4 @@ const compiller = new Compiller({
   verbose: options.verbose || false,
 });
 
-compiller.compile();
+compiller.compile().catch(console.error);
