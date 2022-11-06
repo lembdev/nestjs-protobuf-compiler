@@ -16,7 +16,7 @@
         "${cwd}/test/compiled",
         "--verbose"
       ],
-      "preLaunchTask": "npm: build",
+      "preLaunchTask": "npm: build:dev",
       "outFiles": ["${workspaceFolder}/dist/**/*.js"]
     }
   ]
