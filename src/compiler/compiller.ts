@@ -61,7 +61,16 @@ export class Compiller {
   }
 
   private async output(name: string, generatedTs: string) {
-    const outputPath = join(this.options.output, name, `${name}.ts`);
+    const normalized = name
+      .replace(/([a-z])([A-Z])/g, '$1-$2')
+      .replace(/[\s_]+/g, '-')
+      .toLowerCase();
+
+    const outputPath = join(
+      this.options.output,
+      normalized,
+      `${normalized}.ts`,
+    );
 
     Logger.verbose(`Write file: ${outputPath}`);
 
