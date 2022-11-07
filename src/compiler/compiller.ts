@@ -25,7 +25,7 @@ export class Compiller {
     const protoFiles = new Set<string>();
 
     for (const path of this.options.path) {
-      const pathPattern = path.endsWith('.proto') ? path : `${path}/*.proto`;
+      const pathPattern = path.endsWith('.proto') ? path : `${path}/**/*.proto`;
 
       for (const protofilePath of await glob(pathPattern)) {
         Logger.verbose(blueBright(`found: `) + gray(protofilePath));
