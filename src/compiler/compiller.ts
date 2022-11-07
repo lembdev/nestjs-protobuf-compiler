@@ -35,7 +35,6 @@ export class Compiller {
     }
 
     await this.generate(protoFiles);
-    await this.copyHelpers();
   }
 
   private async generate(protoFiles: Set<string>) {
@@ -75,13 +74,6 @@ export class Compiller {
     Logger.verbose(`Write file: ${outputPath}`);
 
     await outputFile(outputPath, generatedTs, 'utf8');
-  }
-
-  private async copyHelpers() {
-    const helperPath = resolve(__dirname, '..', 'templates', 'common.tsr');
-    const outputPath = join(this.options.output, `common.ts`);
-
-    await copyFile(helperPath, outputPath);
   }
 
   private walkTree(item: Root | any): void {
