@@ -51,7 +51,7 @@ const WELL_KNOWN_TYPES: { [key: string]: string } = {
   toJSON(message: Struct): { [key: string]: unknown } {
     if (!message.fields) return {};
 
-    const getRealValue = (value: Value) => {
+    const getRealValue = (value: Value): unknown => {
       const valueType = Object.keys(value)[0];
       const realValue = Object.values(value)[0];
 
@@ -61,7 +61,7 @@ const WELL_KNOWN_TYPES: { [key: string]: string } = {
         case 'structValue':
           return this.toJSON(realValue);
         case 'listValue':
-          return (Object.values(realValue)[0] || []).map((val) =>
+          return (Object.values(realValue)[0] as [] || []).map((val) =>
             getRealValue(val),
           );
         default:
