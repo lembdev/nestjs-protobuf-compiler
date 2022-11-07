@@ -1,8 +1,8 @@
 import type { Namespace } from 'protobufjs';
 
-import { join, resolve } from 'node:path';
+import { join } from 'node:path';
 import { blueBright, gray } from 'chalk';
-import { outputFile, copyFile } from 'fs-extra';
+import { outputFile } from 'fs-extra';
 import { Root } from 'protobufjs';
 import glob from 'glob-promise';
 
