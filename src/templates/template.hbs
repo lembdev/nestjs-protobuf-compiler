@@ -6,6 +6,7 @@
 
 import { Observable } from 'rxjs';
 import { Metadata } from '@grpc/grpc-js';
+import { GrpcMethod, GrpcStreamMethod } from '@nestjs/microservices';
 {{{importTs this}}}
 
 export namespace {{name}} {
@@ -54,11 +55,38 @@ export interface {{@key}} {
 export interface {{@key}}Client {
   {{#each methods}}
   {{uncapitalize @key}}(
-    data: Observable<{{this.requestType}}>,
+    data: {{this.requestType}},
     metadata?: Metadata,
     ...rest: any[]
   ): Observable<{{this.responseType}}>;
   {{/each}}
+}
+export function {{@key}}Methods() {
+  return function (constructor: Function) {
+    const grpcMethods: string[] = [
+      {{#each methods}}
+      {{#if this.responseStream}}
+      {{else}}
+      '{{uncapitalize @key}}',
+      {{/if}}
+      {{/each}}
+    ];
+    for (const method of grpcMethods) {
+      const descriptor: any = Reflect.getOwnPropertyDescriptor(constructor.prototype, method);
+      GrpcMethod('{{@key}}', method)(constructor.prototype[method], method, descriptor);
+    }
+    const grpcStreamMethods: string[] = [
+      {{#each methods}}
+      {{#if this.responseStream}}
+      '{{uncapitalize @key}}',
+      {{/if}}
+      {{/each}}
+    ];
+    for (const method of grpcStreamMethods) {
+      const descriptor: any = Reflect.getOwnPropertyDescriptor(constructor.prototype, method);
+      GrpcStreamMethod('{{@key}}', method)(constructor.prototype[method], method, descriptor);
+    }
+  };
 }
 {{/inline}}
 
