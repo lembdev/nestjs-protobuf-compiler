@@ -1,23 +1,21 @@
-import type { Namespace } from 'protobufjs';
-
+import type { Namespace, Service, Type } from 'protobufjs';
 import { join } from 'node:path';
 import { blueBright, gray } from 'chalk';
 import { outputFile } from 'fs-extra';
 import { Root } from 'protobufjs';
 import glob from 'glob-promise';
+import { Logger } from './logger/logger';
+import { HandlebarsEngine } from './template-engine/handlebars/handlebars.engine';
 
-import { Logger } from '../logger/logger';
-import { HandlebarsEngine } from '../template-engine/handlebars/handlebars.engine';
-
-export type ICompillerParams = {
+export type ICompilerParams = {
   path: string[];
   output: string;
   template: string;
   verbose: boolean;
 };
 
-export class Compiller {
-  constructor(private readonly options: ICompillerParams) {
+export class Compiler {
+  constructor(private readonly options: ICompilerParams) {
     Logger.init({ isVerbose: options.verbose });
   }
 

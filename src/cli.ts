@@ -1,6 +1,6 @@
 import chalk from 'chalk';
 import yargs from 'yargs';
-import { Compiller } from './compiler';
+import { Compiler } from './compiler';
 
 const options = yargs
   .usage(
@@ -35,11 +35,11 @@ const options = yargs
   )
   .parseSync(process.argv);
 
-const compiller = new Compiller({
+const compiler = new Compiler({
   path: options.path,
   output: options.output,
   template: options.template || 'template.hbs',
   verbose: options.verbose || false,
 });
 
-compiller.compile().catch(console.error);
+compiler.compile().catch(console.error);
