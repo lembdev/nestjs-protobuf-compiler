@@ -1,4 +1,5 @@
-import type { Namespace, Service, Type } from 'protobufjs';
+import { Namespace, Service, Type } from 'protobufjs';
+
 import { join } from 'node:path';
 import { blueBright, gray } from 'chalk';
 import { outputFile } from 'fs-extra';
@@ -74,21 +75,41 @@ export class Compiler {
     await outputFile(outputPath, generatedTs, 'utf8');
   }
 
-  private walkTree(item: Root | any): void {
+  private walkTree(item: any): void {
     if (item.nested) {
-      Object.keys(item.nested).forEach((key) => {
-        this.walkTree(item.nested[key]);
+      item.options = item.options || { resolvedTypes: new Set() };
+
+      Object.values(item.nested).forEach((nested) => {
+        this.walkTree(nested);
+        if (item.parent) {
+          item.parent.options.resolvedTypes = new Set([
+            ...item.parent.options.resolvedTypes,
+            ...item.options.resolvedTypes,
+          ]);
+        }
       });
     }
 
-    if (item.fields) {
-      item.parent.options = item.parent.options || { resolvedTypes: new Set() };
-
-      Object.keys(item.fields).forEach((key) => {
-        const field = item.fields[key];
-
+    if (item instanceof Type) {
+      Object.values(item.fields).forEach((field) => {
         if (field.resolvedType && field.type.includes('.')) {
-          item.parent.options.resolvedTypes.add(field.type);
+          item.parent!.options!.resolvedTypes.add(field.type);
+        }
+      });
+    }
+    if (item instanceof Service) {
+      const serviceNamespace = item.fullName.slice(1, item.name.length * -1);
+
+      Object.values(item.methods).forEach((method) => {
+        const requestType = method.resolvedRequestType!.fullName.slice(1);
+        const responseType = method.resolvedResponseType!.fullName.slice(1);
+
+        if (!requestType.startsWith(serviceNamespace)) {
+          item.parent!.options!.resolvedTypes.add(requestType);
+        }
+
+        if (!responseType.startsWith(serviceNamespace)) {
+          item.parent!.options!.resolvedTypes.add(responseType);
         }
       });
     }
