@@ -1,0 +1,20 @@
+syntax = "proto3";
+
+import "google/protobuf/timestamp.proto";
+import "simple.proto";
+
+package simple;
+
+service SimpleService {
+  rpc Test (TestRequest) returns (Simple) {}
+}
+
+message Simple {
+  int32  id    = 1;
+  string name  = 2;
+  string email = 3;
+}
+
+message TestRequest {
+  int32 id = 1;
+}

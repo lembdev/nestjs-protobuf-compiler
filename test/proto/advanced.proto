@@ -1,0 +1,73 @@
+syntax = "proto3";
+
+import "google/protobuf/timestamp.proto";
+import "google/protobuf/empty.proto";
+import "google/protobuf/struct.proto";
+import "simple.proto";
+
+package advanced;
+
+service AdvancedService {
+  rpc Test (AdvancedRequest) returns (Advanced) {}
+}
+
+enum AdvancedType {
+  ADVANCED_TYPE_UNSPECIFIED = 0;
+  ADVANCED_TYPE_FIRST       = 1;
+  ADVANCED_TYPE_SECOND      = 2;
+}
+
+message Advanced {
+  message Nested {
+    string region             = 1;
+    string access_key_id      = 2;
+    string secret_access_key  = 3;
+    string bucket_name        = 4;
+  }
+
+           double                    double             = 1;
+           float                     float              = 2;
+           int32                     int32              = 3;
+           int64                     int64              = 4;
+           uint32                    uint32             = 5;
+           uint64                    uint64             = 6;
+           sint32                    sint32             = 7;
+           sint64                    sint64             = 8;
+           fixed32                   fixed32            = 9;
+           fixed64                   fixed64            = 10;
+           sfixed32                  sfixed32           = 11;
+           sfixed64                  sfixed64           = 12;
+           bool                      bool               = 13;
+           string                    string             = 14;
+           bytes                     bytes              = 15;
+           google.protobuf.Timestamp timestamp          = 16;
+           google.protobuf.Struct    struct             = 17;
+           AdvancedType              enum               = 18;
+           Advanced                  message            = 19;
+           Nested                    nested             = 20;
+           simple.Simple             relation           = 21;
+  repeated double                    repeated_double    = 22;
+  repeated float                     repeated_float     = 23;
+  repeated int32                     repeated_int32     = 24;
+  repeated int64                     repeated_int64     = 25;
+  repeated uint32                    repeated_uint32    = 26;
+  repeated uint64                    repeated_uint64    = 27;
+  repeated sint32                    repeated_sint32    = 28;
+  repeated sint64                    repeated_sint64    = 29;
+  repeated fixed32                   repeated_fixed32   = 30;
+  repeated fixed64                   repeated_fixed64   = 31;
+  repeated sfixed32                  repeated_sfixed32  = 32;
+  repeated sfixed64                  repeated_sfixed64  = 33;
+  repeated bool                      repeated_bool      = 34;
+  repeated string                    repeated_string    = 35;
+  repeated bytes                     repeated_bytes     = 36;
+  repeated google.protobuf.Timestamp repeated_timestamp = 37;
+  repeated google.protobuf.Struct    repeated_struct    = 38;
+  repeated AdvancedType              repeated_enum      = 39;
+  repeated Advanced                  repeated_message   = 40;
+  repeated Nested                    repeated_nested    = 41;
+  repeated simple.Simple             repeated_relation  = 42;
+}
+message AdvancedRequest {
+  int32 id = 1;
+}

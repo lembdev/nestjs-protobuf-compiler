@@ -1,0 +1,20 @@
+syntax = "proto3";
+
+import "google/protobuf/timestamp.proto";
+import "google/protobuf/empty.proto";
+import "google/protobuf/struct.proto";
+import "user.proto";
+
+package stream;
+
+service StreamService {
+  rpc ReqStream (stream StreamRequest)  returns (google.protobuf.Empty) {}
+  rpc ResStream (google.protobuf.Empty) returns (stream StreamResponse) {}
+}
+
+message StreamRequest {
+  string param = 1;
+}
+message StreamResponse {
+  string data = 1;
+}

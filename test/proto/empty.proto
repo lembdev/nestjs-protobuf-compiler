@@ -1,0 +1,12 @@
+syntax = "proto3";
+
+import "google/protobuf/timestamp.proto";
+import "google/protobuf/empty.proto";
+import "google/protobuf/struct.proto";
+import "user.proto";
+
+package empty;
+
+service EmptyService {
+  rpc Empty  (google.protobuf.Empty) returns (google.protobuf.Empty) {}
+}
