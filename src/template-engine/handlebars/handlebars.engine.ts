@@ -5,13 +5,10 @@ import handlebars from 'handlebars';
 import { resolve } from 'node:path';
 import { readFile } from 'node:fs/promises';
 
-import './helpers/default-value-helper';
-import './helpers/enum-comment-helper';
+import './helpers/convertor.helper';
+import './helpers/import-ts.helper';
 import './helpers/type-helper';
 import './helpers/uncapitalize-hepler';
-import './helpers/convertor.helper';
-import './helpers/to-json.helper';
-import './helpers/import-ts.helper';
 
 export class HandlebarsEngine implements ITemplateEngine {
   constructor(
