@@ -10,16 +10,16 @@ const WELL_KNOWN_TYPES: { [key: string]: string } = {
     return;
   },`,
   '.google.protobuf.Timestamp': `
-  fromJSON(date: Date | number): Timestamp {
-    const timeMS = new Date(date).getTime();
+  fromJSON(date: Date | number | string): Timestamp {
+    const timeMS = date instanceof Date ? date.getTime() : Date.parse(date.toString());
     return {
       seconds: Math.floor(timeMS / 1000),
       nanos: (timeMS % 1000) * 1e6,
     };
   },
-  toJSON(timestamp: Timestamp): Date | undefined {
-    if (!timestamp.seconds || !timestamp.nanos) return;
-    return new Date(timestamp.seconds * 1000 + timestamp.nanos / 1000000);
+  toJSON({seconds, nanos = 0}: Timestamp): Date | undefined {
+    if (!seconds) return;
+    return new Date(seconds * 1000 + nanos / 1000000);
   },`,
   '.google.protobuf.Struct': `
   fromJSON(object: any): Struct {
@@ -114,7 +114,10 @@ const fieldsFromJSON = (type: Type): string => {
   return Object.entries(type.fields)
     .reduce((acc, [key, field]) => {
       const convert = fromJSONConverter(key, field);
-      return [...acc, `${key}: isSet(object.${key}) ? ${convert} : undefined,`];
+      return [
+        ...acc,
+        `...(isSet(object.${key}) ? { ${key}: ${convert} } : {}),`,
+      ];
     }, [] as string[])
     .join('\n      ');
 };
@@ -123,7 +126,10 @@ const fieldsToJSON = (type: Type): string => {
   return Object.entries(type.fields)
     .reduce((acc, [key, field]) => {
       const convert = toJsonConverter(key, field);
-      return [...acc, `...(message.${key} ? {${key}: ${convert}} : {}),`];
+      return [
+        ...acc,
+        `...(message.${key} !== undefined ? {${key}: ${convert}} : {}),`,
+      ];
     }, [] as string[])
     .join('\n      ');
 };
@@ -140,10 +146,10 @@ handlebars.registerHelper('convertor', (type: Type) => {
       ${fieldsFromJSON(type)}
     };
   },
-  toJSON<T>(message: ${type.name}): Partial<T> {
+  toJSON(message: ${type.name}): any {
     return {
       ${fieldsToJSON(type)}
-    } as Partial<T>;
+    };
   },
   `.trim();
 });
