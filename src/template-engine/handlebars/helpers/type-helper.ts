@@ -21,8 +21,7 @@ function jsType(protoType: string): string | null {
   }
 }
 
-handlebars.registerHelper('type', function (field) {
-  // Check for known JS types
+handlebars.registerHelper('type', (field) => {
   let type = jsType(field.type);
 
   if (!type) {

@@ -1,5 +1,5 @@
 import handlebars from 'handlebars';
 
-handlebars.registerHelper('uncapitalize', function (conditional) {
+handlebars.registerHelper('uncapitalize', (conditional) => {
   return conditional[0].toLowerCase() + conditional.slice(1);
 });

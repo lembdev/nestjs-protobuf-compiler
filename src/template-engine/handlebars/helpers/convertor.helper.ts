@@ -78,51 +78,51 @@ const WELL_KNOWN_TYPES: { [key: string]: string } = {
   },`,
 };
 
-const fieldsFromJSON = (type: Type): string => {
-  const converter = (key: string, field: Field): string => {
-    if (field.resolvedType instanceof Enum) {
-      return `object.${key}`;
-    }
-
-    if (field.resolvedType) {
-      const resolvedType = field.resolvedType?.fullName.substring(1);
-
-      return field.repeated
-        ? `object.${key}.map((data: unknown) => ${resolvedType}.fromJSON(data))`
-        : `${resolvedType}.fromJSON(object.${key})`;
-    }
-
+const fromJSONConverter = (key: string, field: Field): string => {
+  if (field.resolvedType instanceof Enum) {
     return `object.${key}`;
-  };
+  }
 
+  if (field.resolvedType) {
+    const resolvedType = field.resolvedType?.fullName.substring(1);
+
+    return field.repeated
+      ? `object.${key}.map((data: unknown) => ${resolvedType}.fromJSON(data))`
+      : `${resolvedType}.fromJSON(object.${key})`;
+  }
+
+  return `object.${key}`;
+};
+
+const toJsonConverter = (key: string, field: Field): string => {
+  if (field.resolvedType instanceof Enum) {
+    return `message.${key}`;
+  }
+
+  if (field.resolvedType) {
+    const resolvedType = field.resolvedType?.fullName.substring(1);
+
+    return field.repeated
+      ? `message.${key}.map((data: ${resolvedType}) => ${resolvedType}.toJSON(data))`
+      : `${resolvedType}.toJSON(message.${key})`;
+  }
+
+  return `message.${key}`;
+};
+
+const fieldsFromJSON = (type: Type): string => {
   return Object.entries(type.fields)
     .reduce((acc, [key, field]) => {
-      const convert = converter(key, field);
+      const convert = fromJSONConverter(key, field);
       return [...acc, `${key}: isSet(object.${key}) ? ${convert} : undefined,`];
     }, [] as string[])
     .join('\n      ');
 };
 
 const fieldsToJSON = (type: Type): string => {
-  const converter = (key: string, field: Field): string => {
-    if (field.resolvedType instanceof Enum) {
-      return `message.${key}`;
-    }
-
-    if (field.resolvedType) {
-      const resolvedType = field.resolvedType?.fullName.substring(1);
-
-      return field.repeated
-        ? `message.${key}.map((data: ${resolvedType}) => ${resolvedType}.toJSON(data))`
-        : `${resolvedType}.toJSON(message.${key})`;
-    }
-
-    return `message.${key}`;
-  };
-
   return Object.entries(type.fields)
     .reduce((acc, [key, field]) => {
-      const convert = converter(key, field);
+      const convert = toJsonConverter(key, field);
       return [...acc, `...(message.${key} ? {${key}: ${convert}} : {}),`];
     }, [] as string[])
     .join('\n      ');
