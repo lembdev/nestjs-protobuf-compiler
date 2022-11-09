@@ -114,9 +114,11 @@ const fieldsFromJSON = (type: Type): string => {
   return Object.entries(type.fields)
     .reduce((acc, [key, field]) => {
       const convert = fromJSONConverter(key, field);
+      const defaultValue = field.repeated ? `{ ${key}: [] }` : '{}';
+
       return [
         ...acc,
-        `...(isSet(object.${key}) ? { ${key}: ${convert} } : {}),`,
+        `...(isSet(object.${key}) ? { ${key}: ${convert} } : ${defaultValue}),`,
       ];
     }, [] as string[])
     .join('\n      ');
@@ -126,9 +128,11 @@ const fieldsToJSON = (type: Type): string => {
   return Object.entries(type.fields)
     .reduce((acc, [key, field]) => {
       const convert = toJsonConverter(key, field);
+      const defaultValue = field.repeated ? `{ ${key}: [] }` : '{}';
+
       return [
         ...acc,
-        `...(message.${key} !== undefined ? {${key}: ${convert}} : {}),`,
+        `...(message.${key} !== undefined ? {${key}: ${convert}} : ${defaultValue}),`,
       ];
     }, [] as string[])
     .join('\n      ');
