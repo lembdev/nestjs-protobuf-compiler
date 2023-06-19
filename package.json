@@ -44,7 +44,7 @@
     "semantic-release": "semantic-release"
   },
   "engines": {
-    "node": ">=16"
+    "node": ">=18"
   },
   "dependencies": {
     "fs-extra": "^10.1.0",
